@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Dispensa de Licitação</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <form action="" id="formConsulta">
+        <label for="dataInicial">Data Inicial: </label>
+        <input type="date" name="dataInicial" id="dataInicial" required>
+        <label for="dataFinal">Data Final: </label>
+        <input type="date" name="dataFinal" id="dataFinal" required>
+        <button type="submit">Consultar</button>
+    </form>
+
+    <script>
+        document.getElementById("formConsulta").addEventListener("submit", (e) => {
+            e.preventDefault();
+            var dataInicial = document.getElementById("dataInicial").value;
+            var dataFinal = document.getElementById("dataFinal").value;
+
+            // GET request for remote image in node.js
+            axios({
+                method: 'get',
+                url: `https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133?unidadeOrgaoCodigoUnidade=090009&dataPublicacaoPncpInicial=${dataInicial}&dataPublicacaoPncpFinal=${dataFinal}&codigoModalidade=6&unidadeOrgaoUfSigla=PE&contratacaoExcluida=false`,
+                responseType: 'json'
+            })
+                .then(function (response) {
+                    console.log(response);
+                });
+        })
+    </script>
+</body>
+
+</html>
