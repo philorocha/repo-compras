@@ -1,36 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta Dispensa de Licitação</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Consumindo API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
-
 <body>
-    <form action="" id="formConsulta">
-        <label for="dataInicial">Data Inicial: </label>
-        <input type="date" name="dataInicial" id="dataInicial" required>
-        <label for="dataFinal">Data Final: </label>
-        <input type="date" name="dataFinal" id="dataFinal" required>
-        <button type="submit">Consultar</button>
-    </form>
+  <h1>Dados da API</h1>
+  <button onclick="carregarDados()">Carregar Dados</button>
+  <div id="saida"></div>
 
-    <script>
-        document.getElementById("formConsulta").addEventListener("submit", (e) => {
-            e.preventDefault();
-            var dataInicial = document.getElementById("dataInicial").value;
-            var dataFinal = document.getElementById("dataFinal").value;
+  <script>
+    async function carregarDados() {
+      try {
+        // 1. Fazendo requisição à API
+        const resposta = await fetch("https://my-json-server.typicode.com/philorocha/dispensa-data/resultado");
+        const dados = await resposta.json();
 
-            // GET request for remote image in node.js
-            axios.get(`https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133?unidadeOrgaoCodigoUnidade=090009&dataPublicacaoPncpInicial=${dataInicial}&dataPublicacaoPncpFinal=${dataFinal}&codigoModalidade=6&unidadeOrgaoUfSigla=PE&contratacaoExcluida=false`)
-                .then(function (response) {
-                    console.log(response);
-                })
-        })
-    </script>
+        // 2. Montando uma tabela HTML
+        let tabela = "<table><tr><th>Número Compra</th><th>Modalidade</th><th>Nº Processo</th><th>Objeto</th><th>Valor Total Estimado</th><th>Valor Total Homologado</th></tr>";
+        dados.forEach(item => {
+          tabela += `<tr>
+            <td>${item.numeroCompra}/${item.anoCompraPncp}</td>
+            <td>${item.modalidadeNome}</td>
+            <td>${item.processo}</td>
+            <td>${item.objetoCompra}</td>
+            <td>${item.valorTotalEstimado}</td>
+            <td>${item.valorTotalHomologado}</td>
+          </tr>`;
+        });
+        tabela += "</table>";
+
+        // 3. Inserindo no HTML
+        document.getElementById("saida").innerHTML = tabela;
+
+      } catch (erro) {
+        console.error("Erro ao carregar API:", erro);
+        document.getElementById("saida").innerText = "Erro ao carregar dados.";
+      }
+    }
+  </script>
 </body>
-
-
 </html>
